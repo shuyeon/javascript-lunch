@@ -66,9 +66,9 @@ const InputForm = {
     InputFormElement.classList.add("form-item");
     if (isRequired) InputFormElement.classList.add("form-item--required");
     InputFormElement.innerHTML = `
-    <label for="${id} text-caption">${label}</label>
-    <input type="text" name=${id} id=${id}  ${isRequired ? "required" : ""}  />
-    ${bottomDescription === "" ? "" : `<span class='help-text text-caption'>${bottomDescription}</span>`}
+                <label for="${id} text-caption">${label}</label>
+                <input type="text" name=${id} id=${id}  ${isRequired ? "required" : ""}  />
+                ${bottomDescription === "" ? "" : `<span class='help-text text-caption'>${bottomDescription}</span>`}
     `;
     return InputFormElement;
   }
@@ -152,12 +152,12 @@ function render(element, dom) {
   dom.append(element);
 }
 const CATEGORY_ICON = {
-  한식: "./templates/category-korean.png",
-  중식: "./templates/category-chinese.png",
-  일식: "./templates/category-japanese.png",
-  양식: "./templates/category-western.png",
-  아시안: "./templates/category-asian.png",
-  기타: "./templates/category-etc.png"
+  한식: "./category-korean.png",
+  중식: "./category-chinese.png",
+  일식: "./category-japanese.png",
+  양식: "./category-western.png",
+  아시안: "./category-asian.png",
+  기타: "./category-etc.png"
 };
 const RESTAURANT_NAME_LENGTH_MAX = 30;
 const DESCRIPTION_LENGTH_MAX = 200;
@@ -415,7 +415,7 @@ const Header = {
     headerElement.innerHTML = `<h1 class="gnb__title text-title">점심 뭐 먹지</h1>`;
     headerElement.appendChild(
       IconButton.create({
-        src: "./templates/add-button.png",
+        src: "./add-button.png",
         onClick: () => Modal.open(),
         label: "음식점 추가"
       })
