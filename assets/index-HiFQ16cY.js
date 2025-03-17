@@ -5,7 +5,7 @@ var __accessCheck = (obj, member, msg) => member.has(obj) || __typeError("Cannot
 var __privateGet = (obj, member, getter) => (__accessCheck(obj, member, "read from private field"), getter ? getter.call(obj) : member.get(obj));
 var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
 var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
-var _el, _favorite, _items, _totalTab, _category;
+var _el, _favorite, _items, _totalTab, _category, _renderingItems;
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -53,22 +53,22 @@ function toElement(htmlString) {
 }
 function Modal(id, modalContent) {
   function createModalBackdrop(id2) {
-    const $modalBackdrop = toElement(`
+    const $el2 = toElement(`
       <div class="modal-backdrop" />
     `);
-    $modalBackdrop.addEventListener("click", () => Modal.close(id2));
-    return $modalBackdrop;
+    $el2.addEventListener("click", () => Modal.close(id2));
+    return $el2;
   }
   function createModalContainer(modalContent2) {
-    const $modalContainer = toElement(`
+    const $el2 = toElement(`
       <div class="modal-container"/>
     `);
-    append($modalContainer, modalContent2);
-    return $modalContainer;
+    append($el2, modalContent2);
+    return $el2;
   }
-  const $modal = toElement(`<div id="${id}" class="modal" />`);
-  append($modal, createModalBackdrop(id), createModalContainer(modalContent));
-  return $modal;
+  const $el = toElement(`<div id="${id}" class="modal" />`);
+  append($el, createModalBackdrop(id), createModalContainer(modalContent));
+  return $el;
 }
 Modal.open = function(id) {
   document.getElementById(id).classList.add("modal--open");
@@ -87,15 +87,15 @@ Modal.close = function(id) {
   }
 };
 function Header(iconButton) {
-  const $header = toElement(`
+  const $el = toElement(`
     <header class="gnb">
       <h1 class="gnb__title text-title">점심 뭐 먹지</h1>
     </header>`);
-  append($header, iconButton);
-  return $header;
+  append($el, iconButton);
+  return $el;
 }
 function InputForm({ id, label, required, bottomDescription }) {
-  const $inputForm = toElement(
+  const $el = toElement(
     `
       <div class="form-item" ${requiredClassName()}">
       <label for="${id} text-caption">${label}</label>
@@ -104,10 +104,10 @@ function InputForm({ id, label, required, bottomDescription }) {
       </div>
       `
   );
-  return $inputForm;
+  return $el;
 }
 function SelectForm({ id, label, dropdownList, required }) {
-  const $selectForm = toElement(
+  const $el = toElement(
     ` <div class="form-item" ${requiredClassName()}">
             <label for="${id} text-caption">${label}</label>
               <select name=${id} id=${id} ${"required"} >
@@ -118,26 +118,26 @@ function SelectForm({ id, label, dropdownList, required }) {
         </div>
   `
   );
-  return $selectForm;
+  return $el;
 }
 function TextButton({ title, onClick, id }) {
-  const $textButton = toElement(
+  const $el = toElement(
     `<button class="text-caption button" id="${id}" type="${id === "add__button" ? "submit" : "button"}">
       ${title}
     </button>`
   );
-  $textButton.addEventListener("click", onClick);
-  return $textButton;
+  $el.addEventListener("click", onClick);
+  return $el;
 }
 function ButtonContainer(left, right) {
-  const $buttonContainer = toElement(`<div class="button-container" />`);
+  const $el = toElement(`<div class="button-container" />`);
   left.classList.add("button--secondary");
   right.classList.add("button--primary");
-  append($buttonContainer, left, right);
-  return $buttonContainer;
+  append($el, left, right);
+  return $el;
 }
 function TextareaForm({ id, bottomDescription, rows, label, required }) {
-  const $textareaForm = toElement(
+  const $el = toElement(
     `
       <div class="form-item" ${requiredClassName()}">
         <label for="${id} text-caption" >${label}</label>
@@ -154,7 +154,7 @@ function TextareaForm({ id, bottomDescription, rows, label, required }) {
       </div>
     `
   );
-  return $textareaForm;
+  return $el;
 }
 const RESTAURANT_NAME_LENGTH_MAX = 30;
 const DESCRIPTION_LENGTH_MAX = 200;
@@ -226,12 +226,12 @@ const Validator = {
 function requiredClassName(required) {
 }
 function AddLunchModalForm(restaurantList2, modalId) {
-  const $modalForm = toElement(`
+  const $el = toElement(`
     <form>
       <h2 class="modal-title text-title">새로운 음식점</h2>
     </form>
     `);
-  $modalForm.addEventListener("submit", (event) => {
+  $el.addEventListener("submit", (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const { category, description, distance, link, name } = Object.fromEntries(
@@ -256,7 +256,7 @@ function AddLunchModalForm(restaurantList2, modalId) {
     }
   });
   append(
-    $modalForm,
+    $el,
     SelectForm({
       id: "category",
       label: "카테고리",
@@ -325,16 +325,16 @@ function AddLunchModalForm(restaurantList2, modalId) {
       })
     )
   );
-  return $modalForm;
+  return $el;
 }
 function IconButton({ src, onClick, label }) {
-  const $button = toElement(`
+  const $el = toElement(`
     <button type="button" class="gnb__button" aria-label="${label}">
       <img src="${src}" alt="${label}" />
     </button>
   `);
-  $button.addEventListener("click", onClick);
-  return $button;
+  $el.addEventListener("click", onClick);
+  return $el;
 }
 const MOCK_ITEM = {
   restaurantList: [
@@ -384,7 +384,7 @@ const MOCK_ITEM = {
 };
 const $ = (selector) => document.querySelector(selector);
 function Select({ name, id, className, dropdownList }, restaurantList2) {
-  const $select = toElement(
+  const $el = toElement(
     `  <select name=${name} id=${id} class=${id}>
               ${dropdownList.map(
       ({ label, value }) => `<option value="${value}">${label}</option>`
@@ -392,7 +392,7 @@ function Select({ name, id, className, dropdownList }, restaurantList2) {
               </select>
   `
   );
-  $select.addEventListener("change", function(event) {
+  $el.addEventListener("change", function(event) {
     const { id: id2, value } = event.target;
     if (id2 === "sorting-filter") {
       if (value === "name") {
@@ -406,16 +406,16 @@ function Select({ name, id, className, dropdownList }, restaurantList2) {
       if (event.target.value === "") {
         return restaurantList2.resetFilter();
       }
-      restaurantList2.filterByCategory(event.target.value);
+      restaurantList2.setCategoryTab(event.target.value);
     }
   });
-  return $select;
+  return $el;
 }
 class FavoriteButton {
-  constructor(element, name, favorite, restaurantList2) {
+  constructor(parentEl, name, favorite, restaurantList2) {
     __privateAdd(this, _el);
     __privateAdd(this, _favorite);
-    __privateSet(this, _favorite, __privateGet(this, _favorite));
+    __privateSet(this, _favorite, favorite);
     __privateSet(this, _el, toElement(`
         <button type="button" class="gnb__button child-exclude" aria-label="favorite" style="margin-left: auto">
           <img src=${FAVORITE_ICON[favorite]} alt="favotire" />
@@ -425,7 +425,7 @@ class FavoriteButton {
       "click",
       () => this.toggleState(name, restaurantList2, favorite)
     );
-    append(element, __privateGet(this, _el));
+    append(parentEl, __privateGet(this, _el));
   }
   toggleState(name, restaurantList2) {
     __privateSet(this, _favorite, !__privateGet(this, _favorite));
@@ -482,8 +482,8 @@ function RestaurantDetail({ category, name, distance, description, link, favorit
       })
     )
   );
-  const categoryElement = $el.querySelector(".restaurant__detail__top");
-  new FavoriteButton(categoryElement, name, favorite, restaurantList2);
+  const favoriteParentEl = $el.querySelector(".restaurant__detail__top");
+  new FavoriteButton(favoriteParentEl, name, favorite, restaurantList2);
   return $el;
 }
 function TabButton(tabType) {
@@ -500,6 +500,7 @@ class RestaurantList {
     __privateAdd(this, _items);
     __privateAdd(this, _totalTab);
     __privateAdd(this, _category);
+    __privateAdd(this, _renderingItems, []);
     if (!localStorage.getItem("restaurantList")) {
       localStorage.setItem(
         "restaurantList",
@@ -515,16 +516,23 @@ class RestaurantList {
   setLocalStorage() {
     localStorage.setItem("restaurantList", JSON.stringify(__privateGet(this, _items)));
   }
+  setCategoryTab(category) {
+    __privateSet(this, _category, category);
+    this.render();
+  }
   render() {
     const el = $(".restaurant-list");
-    let data = __privateGet(this, _totalTab) ? this.getTotalTabData() : this.getFavoriteTabData();
-    el.innerHTML = data.map(LunchInfoCard).join("");
-    data.forEach((item) => {
+    __privateSet(this, _renderingItems, this.filterByCategory());
+    if (!__privateGet(this, _totalTab)) {
+      __privateSet(this, _renderingItems, this.filterByFavorite(__privateGet(this, _renderingItems)));
+    }
+    el.innerHTML = __privateGet(this, _renderingItems).map(LunchInfoCard).join("");
+    __privateGet(this, _renderingItems).forEach((item) => {
       const $li = document.getElementById(`restaurant_${item.name}`);
       new FavoriteButton($li, item.name, item.favorite, this);
       $li == null ? void 0 : $li.addEventListener("click", (event) => {
-        var _a;
-        if ((_a = event.target) == null ? void 0 : _a.closest(".child-exclude")) {
+        const target = event.target;
+        if (target.closest(".child-exclude")) {
           return;
         }
         $("main").append(
@@ -536,21 +544,6 @@ class RestaurantList {
         Modal.open(`restaurantModal_${item.name}`);
       });
     });
-  }
-  resetFilter() {
-    __privateSet(this, _items, JSON.parse(localStorage.getItem("restaurantList")));
-    __privateSet(this, _category, "선택해 주세요");
-    this.render();
-  }
-  getFavoriteTabData() {
-    const filteredData = this.filter();
-    return filteredData.filter(
-      (restaurant) => restaurant.favorite === true
-    );
-  }
-  getTotalTabData() {
-    const filteredData = this.filter();
-    return filteredData;
   }
   renderTab() {
     const $el = toElement(`
@@ -573,13 +566,14 @@ class RestaurantList {
       this.render();
     });
   }
-  add(newRestaurant) {
-    __privateGet(this, _items).push(newRestaurant);
-    localStorage.setItem("restaurantList", JSON.stringify(__privateGet(this, _items)));
+  resetFilter() {
+    __privateSet(this, _items, JSON.parse(localStorage.getItem("restaurantList") || "[]"));
+    __privateSet(this, _category, "선택해 주세요");
     this.render();
   }
-  filterByCategory(category) {
-    __privateSet(this, _category, category);
+  add(newRestaurant) {
+    __privateGet(this, _items).push(newRestaurant);
+    this.setLocalStorage();
     this.render();
   }
   sortByName() {
@@ -592,12 +586,17 @@ class RestaurantList {
     __privateGet(this, _items).sort((a, b) => a.distance - b.distance);
     this.render();
   }
-  filter() {
+  filterByCategory() {
     if (__privateGet(this, _category) === "선택해 주세요") {
       return __privateGet(this, _items);
     }
     return __privateGet(this, _items).filter(
       ({ category: c }) => c === __privateGet(this, _category)
+    );
+  }
+  filterByFavorite(data) {
+    return data.filter(
+      (restaurant) => restaurant.favorite === true
     );
   }
   remove(targetName, modalId) {
@@ -619,6 +618,7 @@ class RestaurantList {
 _items = new WeakMap();
 _totalTab = new WeakMap();
 _category = new WeakMap();
+_renderingItems = new WeakMap();
 const restaurantList = new RestaurantList();
 $("body").prepend(
   Header(
